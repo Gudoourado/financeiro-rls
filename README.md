@@ -167,3 +167,7 @@ estudo/                        carga, consultas, cenários, medição, contagem 
 resultados/                    os números publicados: resumo, planos, chamadas da função, isolamento
 docs/                          relatório do estudo e ADR
 ```
+
+## Licença
+
+MIT. Veja [LICENSE](LICENSE).

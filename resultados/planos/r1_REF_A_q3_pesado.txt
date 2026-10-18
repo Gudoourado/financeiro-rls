@@ -1,0 +1,27 @@
+-- r1_REF_A_q3_pesado (papel postgres); execução extra, fora da conta
+SELECT forma_pagamento, conta_id, cartao_id
+  FROM lancamento
+ WHERE tipo = 'gasto' AND forma_pagamento IS NOT NULL AND removido_em IS NULL AND usuario_id = '71cc4412-a3bc-4f13-a21f-95d3629d5d4c'
+ ORDER BY criado_em DESC, id DESC
+ LIMIT 1;
+
+Limit  (cost=36323.63..36323.63 rows=1 width=63) (actual time=433.719..433.722 rows=1 loops=1)
+  Output: forma_pagamento, conta_id, cartao_id, criado_em, id
+  Buffers: shared read=31965
+  ->  Sort  (cost=36323.63..36472.49 rows=59545 width=63) (actual time=433.716..433.718 rows=1 loops=1)
+        Output: forma_pagamento, conta_id, cartao_id, criado_em, id
+        Sort Key: lancamento.criado_em DESC, lancamento.id DESC
+        Sort Method: top-N heapsort  Memory: 25kB
+        Buffers: shared read=31965
+        ->  Bitmap Heap Scan on public.lancamento  (cost=1572.18..36025.90 rows=59545 width=63) (actual time=38.899..405.608 rows=81182 loops=1)
+              Output: forma_pagamento, conta_id, cartao_id, criado_em, id
+              Recheck Cond: ((lancamento.usuario_id = '71cc4412-a3bc-4f13-a21f-95d3629d5d4c'::uuid) AND (lancamento.removido_em IS NULL))
+              Filter: ((lancamento.forma_pagamento IS NOT NULL) AND (lancamento.tipo = 'gasto'::text))
+              Rows Removed by Filter: 35101
+              Heap Blocks: exact=31843
+              Buffers: shared read=31965
+              ->  Bitmap Index Scan on lancamento_mes_ativo  (cost=0.00..1557.29 rows=116915 width=0) (actual time=16.191..16.192 rows=116283 loops=1)
+                    Index Cond: (lancamento.usuario_id = '71cc4412-a3bc-4f13-a21f-95d3629d5d4c'::uuid)
+                    Buffers: shared read=122
+Planning Time: 0.178 ms
+Execution Time: 433.770 ms

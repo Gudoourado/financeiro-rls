@@ -1,0 +1,27 @@
+-- r1_A_q3_pesado (papel app_runtime); execução extra, fora da conta
+SELECT forma_pagamento, conta_id, cartao_id
+  FROM lancamento
+ WHERE tipo = 'gasto' AND forma_pagamento IS NOT NULL AND removido_em IS NULL
+ ORDER BY criado_em DESC, id DESC
+ LIMIT 1;
+
+Limit  (cost=65552.63..65552.63 rows=1 width=63) (actual time=341.990..341.993 rows=1 loops=1)
+  Output: forma_pagamento, conta_id, cartao_id, criado_em, id
+  Buffers: shared read=31965
+  ->  Sort  (cost=65552.63..65701.49 rows=59545 width=63) (actual time=341.986..341.988 rows=1 loops=1)
+        Output: forma_pagamento, conta_id, cartao_id, criado_em, id
+        Sort Key: lancamento.criado_em DESC, lancamento.id DESC
+        Sort Method: top-N heapsort  Memory: 25kB
+        Buffers: shared read=31965
+        ->  Bitmap Heap Scan on public.lancamento  (cost=1572.43..65254.90 rows=59545 width=63) (actual time=22.613..313.298 rows=81182 loops=1)
+              Output: forma_pagamento, conta_id, cartao_id, criado_em, id
+              Recheck Cond: ((lancamento.usuario_id = app_usuario_atual()) AND (lancamento.removido_em IS NULL))
+              Filter: ((lancamento.forma_pagamento IS NOT NULL) AND (lancamento.tipo = 'gasto'::text))
+              Rows Removed by Filter: 35101
+              Heap Blocks: exact=31843
+              Buffers: shared read=31965
+              ->  Bitmap Index Scan on lancamento_mes_ativo  (cost=0.00..1557.54 rows=116915 width=0) (actual time=13.107..13.108 rows=116283 loops=1)
+                    Index Cond: (lancamento.usuario_id = app_usuario_atual())
+                    Buffers: shared read=122
+Planning Time: 0.176 ms
+Execution Time: 343.491 ms

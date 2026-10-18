@@ -1,0 +1,59 @@
+== Isolamento no estado "A" ==
+lancamento: (usuario_id = app_usuario_atual())
+USUARIO_A=c96bda49-2cd4-4da4-9fe9-c2d29133ced0 USUARIO_B=31af53e9-bb84-4957-ad03-d708d925b8b3
+semeado para A: instituicao, conta, cartao, categoria, fatura, compra_parcelada, lancamento, evento_de_uso
+-- Caso 1: B não vê nada de A, em nenhuma tabela com RLS
+OK      instituicao: A conta: obtido=1 esperado=1
+OK      instituicao: B conta: obtido=0 esperado=0
+OK      conta: A conta: obtido=1 esperado=1
+OK      conta: B conta: obtido=0 esperado=0
+OK      cartao: A conta: obtido=1 esperado=1
+OK      cartao: B conta: obtido=0 esperado=0
+OK      categoria: A conta: obtido=1 esperado=1
+OK      categoria: B conta: obtido=0 esperado=0
+OK      fatura: A conta: obtido=1 esperado=1
+OK      fatura: B conta: obtido=0 esperado=0
+OK      compra_parcelada: A conta: obtido=1 esperado=1
+OK      compra_parcelada: B conta: obtido=0 esperado=0
+OK      lancamento: A conta: obtido=1 esperado=1
+OK      lancamento: B conta: obtido=0 esperado=0
+OK      evento_de_uso: A conta: obtido=1 esperado=1
+OK      evento_de_uso: B conta: obtido=0 esperado=0
+-- Caso 2: B não muda nem apaga as linhas de A, nem move uma linha para si trocando o usuario_id
+OK      instituicao: UPDATE de B na linha de A (linhas afetadas): obtido=0 esperado=0
+OK      conta: UPDATE de B na linha de A (linhas afetadas): obtido=0 esperado=0
+OK      cartao: UPDATE de B na linha de A (linhas afetadas): obtido=0 esperado=0
+OK      categoria: UPDATE de B na linha de A (linhas afetadas): obtido=0 esperado=0
+OK      fatura: UPDATE de B na linha de A (linhas afetadas): obtido=0 esperado=0
+OK      compra_parcelada: UPDATE de B na linha de A (linhas afetadas): obtido=0 esperado=0
+OK      lancamento: UPDATE de B na linha de A (linhas afetadas): obtido=0 esperado=0
+OK      evento_de_uso: UPDATE de B na linha de A (linhas afetadas): obtido=0 esperado=0
+OK      evento_de_uso: DELETE de B (linhas afetadas): obtido=0 esperado=0
+OK      evento_de_uso: A ainda conta: obtido=1 esperado=1
+OK      lancamento: DELETE de B (linhas afetadas): obtido=0 esperado=0
+OK      lancamento: A ainda conta: obtido=1 esperado=1
+OK      compra_parcelada: DELETE de B (linhas afetadas): obtido=0 esperado=0
+OK      compra_parcelada: A ainda conta: obtido=1 esperado=1
+OK      fatura: DELETE de B (linhas afetadas): obtido=0 esperado=0
+OK      fatura: A ainda conta: obtido=1 esperado=1
+OK      categoria: DELETE de B (linhas afetadas): obtido=0 esperado=0
+OK      categoria: A ainda conta: obtido=1 esperado=1
+OK      cartao: DELETE de B (linhas afetadas): obtido=0 esperado=0
+OK      cartao: A ainda conta: obtido=1 esperado=1
+OK      conta: DELETE de B (linhas afetadas): obtido=0 esperado=0
+OK      conta: A ainda conta: obtido=1 esperado=1
+OK      instituicao: DELETE de B (linhas afetadas): obtido=0 esperado=0
+OK      instituicao: A ainda conta: obtido=1 esperado=1
+-- Caso 3 (bônus): B não grava uma linha com o usuario_id de A
+OK      instituicao: INSERT de B com usuario_id de A é recusado pelo RLS: obtido=true esperado=true
+OK      lancamento: INSERT de B com usuario_id de A é recusado pelo RLS: obtido=true esperado=true
+-- Falha fechada: sem marca de usuário, a leitura dá erro
+OK      lancamento sem set_config: erro app_usuario_ausente: obtido=true esperado=true
+-- Volume: com RLS, cada perfil vê exatamente as suas linhas (conferido como postgres, sem RLS)
+OK      lancamento pesado: contagem com RLS = contagem filtrada: obtido=120000 esperado=120000
+OK      lancamento pesado: nenhuma linha de outro usuário visível: obtido=0 esperado=0
+OK      lancamento mediano: contagem com RLS = contagem filtrada: obtido=3795 esperado=3795
+OK      lancamento mediano: nenhuma linha de outro usuário visível: obtido=0 esperado=0
+OK      lancamento leve: contagem com RLS = contagem filtrada: obtido=2256 esperado=2256
+OK      lancamento leve: nenhuma linha de outro usuário visível: obtido=0 esperado=0
+== Resultado: todas as conferências passaram ==

@@ -1,0 +1,34 @@
+-- r1_REF_A_q2_pesado (papel postgres); execução extra, fora da conta
+SELECT f.cartao_id, f.mes_referencia, l.tipo, l.valor_centavos
+  FROM lancamento l
+  JOIN fatura f ON f.id = l.fatura_id
+ WHERE f.mes_referencia = ANY(ARRAY['2026-09', '2026-10']) AND l.removido_em IS NULL
+   AND l.usuario_id = '71cc4412-a3bc-4f13-a21f-95d3629d5d4c' AND f.usuario_id = '71cc4412-a3bc-4f13-a21f-95d3629d5d4c';
+
+Nested Loop  (cost=9.94..897.29 rows=3833 width=39) (actual time=0.293..3.329 rows=1522 loops=1)
+  Output: f.cartao_id, f.mes_referencia, l.tipo, l.valor_centavos
+  Buffers: shared hit=1016
+  ->  Bitmap Heap Scan on public.fatura f  (cost=5.20..237.20 rows=4 width=40) (actual time=0.198..0.235 rows=4 loops=1)
+        Output: f.id, f.usuario_id, f.cartao_id, f.mes_referencia, f.data_fechamento, f.data_vencimento, f.criado_em
+        Recheck Cond: (f.usuario_id = '71cc4412-a3bc-4f13-a21f-95d3629d5d4c'::uuid)
+        Filter: (f.mes_referencia = ANY ('{2026-09,2026-10}'::text[]))
+        Rows Removed by Filter: 118
+        Heap Blocks: exact=62
+        Buffers: shared hit=64
+        ->  Bitmap Index Scan on fatura_usuario_id_id_key  (cost=0.00..5.20 rows=122 width=0) (actual time=0.027..0.028 rows=122 loops=1)
+              Index Cond: (f.usuario_id = '71cc4412-a3bc-4f13-a21f-95d3629d5d4c'::uuid)
+              Buffers: shared hit=2
+  ->  Bitmap Heap Scan on public.lancamento l  (cost=4.73..164.99 rows=3 width=31) (actual time=0.079..0.715 rows=380 loops=4)
+        Output: l.id, l.usuario_id, l.tipo, l.valor_centavos, l.data_lancamento, l.mes_competencia, l.descricao, l.forma_pagamento, l.conta_id, l.conta_destino_id, l.cartao_id, l.fatura_id, l.categoria_id, l.compra_parcelada_id, l.parcela_numero, l.parcela_total, l.origem, l.removido_em, l.criado_em, l.atualizado_em
+        Recheck Cond: (f.id = l.fatura_id)
+        Filter: ((l.removido_em IS NULL) AND (l.usuario_id = '71cc4412-a3bc-4f13-a21f-95d3629d5d4c'::uuid))
+        Rows Removed by Filter: 14
+        Heap Blocks: exact=940
+        Buffers: shared hit=952
+        ->  Bitmap Index Scan on lancamento_da_fatura  (cost=0.00..4.73 rows=41 width=0) (actual time=0.046..0.046 rows=394 loops=4)
+              Index Cond: (l.fatura_id = f.id)
+              Buffers: shared hit=12
+Planning:
+  Buffers: shared hit=6
+Planning Time: 0.421 ms
+Execution Time: 3.452 ms

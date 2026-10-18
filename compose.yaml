@@ -1,0 +1,22 @@
+# Postgres só deste repositório. O nome do projeto separa os contêineres e o volume de qualquer outro compose da
+# máquina. As senhas vêm do .env (copie o .env.example). A porta só abre no 127.0.0.1.
+name: financeiro-rls
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env (copie o .env.example)}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORTA:-55433}:5432"
+    volumes:
+      - dados:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  dados:

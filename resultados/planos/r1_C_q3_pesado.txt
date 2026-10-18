@@ -1,0 +1,17 @@
+-- r1_C_q3_pesado (papel app_runtime); execução extra, fora da conta
+SELECT forma_pagamento, conta_id, cartao_id
+  FROM lancamento
+ WHERE tipo = 'gasto' AND forma_pagamento IS NOT NULL AND removido_em IS NULL
+ ORDER BY criado_em DESC, id DESC
+ LIMIT 1;
+
+Limit  (cost=0.68..2.93 rows=1 width=63) (actual time=0.044..0.045 rows=1 loops=1)
+  Output: forma_pagamento, conta_id, cartao_id, criado_em, id
+  Buffers: shared hit=4
+  ->  Index Scan using lancamento_ultimo_criado on public.lancamento  (cost=0.68..136567.03 rows=60514 width=63) (actual time=0.043..0.044 rows=1 loops=1)
+        Output: forma_pagamento, conta_id, cartao_id, criado_em, id
+        Index Cond: (lancamento.usuario_id = app_usuario_atual())
+        Filter: ((lancamento.forma_pagamento IS NOT NULL) AND (lancamento.tipo = 'gasto'::text))
+        Buffers: shared hit=4
+Planning Time: 0.261 ms
+Execution Time: 0.070 ms

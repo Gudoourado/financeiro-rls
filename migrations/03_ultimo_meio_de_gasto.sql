@@ -1,0 +1,11 @@
+-- A tela de lançar sugere o último meio de gasto (consulta Q3 do estudo: WHERE tipo = 'gasto' AND forma_pagamento IS
+-- NOT NULL AND removido_em IS NULL ORDER BY criado_em DESC, id DESC LIMIT 1). Sem este índice, o banco lia todos os
+-- lançamentos ativos do usuário e ordenava para achar um. Com ele, a política do RLS (usuario_id =
+-- app_usuario_atual()) entra como chave, a ordem do índice é a do ORDER BY, e a consulta para na primeira linha.
+-- No estudo (docs/relatorio.md): de ~330 ms para ~0,1 ms no usuário com 120 mil lançamentos, nesta carga e neste
+-- ambiente.
+-- A política não muda: reescrevê-la com (SELECT app_usuario_atual()) tira do planejador o usuário de verdade, e no
+-- mesmo estudo a consulta das faturas (Q2) passou de ~8 ms para 74 a 87 ms nesse usuário.
+-- CREATE INDEX comum, e não CONCURRENTLY: o runner aplica cada migração numa transação. Ele bloqueia escritas em
+-- lancamento enquanto o índice é construído.
+CREATE INDEX lancamento_ultimo_criado ON lancamento (usuario_id, criado_em DESC, id DESC) WHERE removido_em IS NULL;

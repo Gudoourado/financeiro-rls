@@ -17,7 +17,7 @@ Responda **passou**, **falhou** ou **bloqueado** após cada passo. O assistente 
 
 2. Clique em “entender a proteção” na linha “Explore”.
 
-   **Esperado:** a página salta para “Como o isolamento funciona”, com um diagrama da transação, do papel `app_runtime` e do RLS.
+   **Esperado:** a página salta para “Como o isolamento funciona”, com quatro passos legíveis que explicam a transação, o papel `app_runtime` e o RLS.
 
    - [ ] passou · [ ] falhou · [ ] bloqueado — observação:
 
@@ -43,7 +43,7 @@ Responda **passou**, **falhou** ou **bloqueado** após cada passo. O assistente 
 
 ## Regressão provável
 
-O GitHub pode renderizar Mermaid e SVG de forma diferente da prévia local. Confira também se o link “ler o relatório completo” abre `docs/relatorio.md`.
+O GitHub pode renderizar o SVG de forma diferente da prévia local. Confira também se o link “ler o relatório completo” abre `docs/relatorio.md`.
 
 ## Limpeza
 

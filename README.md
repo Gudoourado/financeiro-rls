@@ -16,19 +16,14 @@
 
 ## Como o isolamento funciona
 
-```mermaid
-flowchart TB
-    A["1 · Aplicação autentica o usuário"] --> B["2 · BEGIN e set_config('app.usuario_id')"]
-    B --> C["3 · Consulta como app_runtime"]
-    C --> D{"RLS: usuario_id corresponde?"}
-    D -->|Sim| E["Somente as linhas do usuário"]
-    D -->|Não ou sem marca| F["Acesso recusado"]
-    E --> G["COMMIT: marca removida"]
-```
+1. **Autenticar.** A aplicação identifica a pessoa antes de acessar o banco.
+2. **Marcar a transação.** `BEGIN` e `set_config('app.usuario_id', id, true)` guardam o usuário apenas até o `COMMIT`.
+3. **Consultar como `app_runtime`.** A política de RLS compara a marca com `usuario_id` em cada linha.
+4. **Entregar só os dados permitidos.** Linhas de outra pessoa ficam fora da consulta; sem marca, o banco gera `app_usuario_ausente`.
 
-O app marca o usuário **dentro da transação** com `set_config('app.usuario_id', id, true)`. A política `dados_do_usuario` compara essa marca com `usuario_id` em cada linha. O `true` limita a marca à transação; ela não acompanha uma conexão reutilizada pelo pool.
+O `true` limita a marca à transação; ela não acompanha uma conexão reutilizada pelo pool. A política aplicada às tabelas é `dados_do_usuario`.
 
-As chaves estrangeiras compostas `(usuario_id, x_id)` impedem referências a dados de outra pessoa. Isso é necessário porque a checagem de chave estrangeira não respeita o RLS da mesma forma que uma consulta comum. Sem usuário marcado, a função `app_usuario_atual()` gera o erro `app_usuario_ausente`.
+As chaves estrangeiras compostas `(usuario_id, x_id)` impedem referências a dados de outra pessoa. Isso é necessário porque a checagem de chave estrangeira não respeita o RLS da mesma forma que uma consulta comum.
 
 > **Limite da proteção:** a marca é definida pela aplicação; o banco não autentica a pessoa. Quem obtiver o papel `app_runtime` e puder executar SQL arbitrário pode marcar outro usuário. O RLS protege consultas que esquecem o filtro de usuário, mas não substitui autenticação nem consultas parametrizadas. Leia a [decisão de arquitetura](docs/adr-0025-rls-por-usuario.md).
 

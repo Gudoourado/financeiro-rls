@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="titulo descricao">
+  <title id="titulo">Financeiro RLS — dados isolados por usuário</title>
+  <desc id="descricao">Ilustração de duas consultas separadas: cada usuário acessa somente as próprias linhas no PostgreSQL.</desc>
+  <defs>
+    <linearGradient id="fundo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#182e54"/>
+      <stop offset=".54" stop-color="#101827"/>
+      <stop offset="1" stop-color="#0b0d12"/>
+    </linearGradient>
+    <linearGradient id="faixa" x1="0" x2="1">
+      <stop offset="0" stop-color="#347bfa"/>
+      <stop offset=".58" stop-color="#4ade80"/>
+      <stop offset="1" stop-color="#4ade80" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="320" rx="24" fill="url(#fundo)"/>
+  <rect x="1" y="1" width="1198" height="318" rx="23" fill="none" stroke="#38527c"/>
+  <path d="M24 2h840" stroke="url(#faixa)" stroke-width="4"/>
+
+  <rect x="52" y="49" width="56" height="56" rx="13" fill="#0b0d12" stroke="#3a4a69"/>
+  <path d="M70 86V68h22M70 77h15" fill="none" stroke="#347bfa" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M87 77h6" fill="none" stroke="#4ade80" stroke-width="8" stroke-linecap="round"/>
+  <text x="124" y="73" fill="#a6c6ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="2.3">FINANCEIRO / ESTUDO TÉCNICO</text>
+  <text x="52" y="168" fill="#f2f5fb" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="52" font-weight="700" letter-spacing="-2">Dados isolados</text>
+  <text x="52" y="224" fill="#f2f5fb" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="52" font-weight="700" letter-spacing="-2">por usuário.</text>
+  <text x="54" y="275" fill="#b9c7dd" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18">PostgreSQL 17  ·  RLS testado  ·  desempenho medido</text>
+
+  <rect x="749" y="47" width="395" height="226" rx="19" fill="#0d1422" stroke="#364966"/>
+  <text x="776" y="84" fill="#8ba7d2" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="1.4">A MESMA TABELA, DADOS SEPARADOS</text>
+  <line x1="776" y1="101" x2="1117" y2="101" stroke="#29384f"/>
+  <rect x="776" y="119" width="45" height="45" rx="11" fill="#193764"/>
+  <text x="790" y="149" fill="#b8d3ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="21" font-weight="700">A</text>
+  <path d="M837 141h54" stroke="#5c96f5" stroke-width="2.5"/>
+  <path d="m886 136 7 5-7 5" fill="none" stroke="#5c96f5" stroke-width="2.5"/>
+  <rect x="907" y="119" width="210" height="45" rx="10" fill="#162841" stroke="#325582"/>
+  <text x="927" y="148" fill="#e3ecfa" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" font-weight="600">somente linhas de A</text>
+  <rect x="776" y="184" width="45" height="45" rx="11" fill="#164436"/>
+  <text x="790" y="214" fill="#b9f0cb" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="21" font-weight="700">B</text>
+  <path d="M837 206h54" stroke="#54bf83" stroke-width="2.5"/>
+  <path d="m886 201 7 5-7 5" fill="none" stroke="#54bf83" stroke-width="2.5"/>
+  <rect x="907" y="184" width="210" height="45" rx="10" fill="#153027" stroke="#2d7353"/>
+  <text x="927" y="213" fill="#e3f6e8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" font-weight="600">somente linhas de B</text>
+</svg>

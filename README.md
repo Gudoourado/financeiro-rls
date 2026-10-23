@@ -17,14 +17,13 @@
 ## Como o isolamento funciona
 
 ```mermaid
-flowchart LR
-    A[Aplicação autentica<br/>o usuário] --> B[BEGIN]
-    B --> C[set_config<br/>app.usuario_id]
-    C --> D[Consulta com<br/>app_runtime]
-    D --> E{RLS no<br/>PostgreSQL}
-    E -->|usuario_id corresponde| F[Linhas do usuário]
-    E -->|outro usuário ou sem marca| G[Acesso recusado]
-    F --> H[COMMIT<br/>marca removida]
+flowchart TB
+    A["1 · Aplicação autentica o usuário"] --> B["2 · BEGIN e set_config('app.usuario_id')"]
+    B --> C["3 · Consulta como app_runtime"]
+    C --> D{"RLS: usuario_id corresponde?"}
+    D -->|Sim| E["Somente as linhas do usuário"]
+    D -->|Não ou sem marca| F["Acesso recusado"]
+    E --> G["COMMIT: marca removida"]
 ```
 
 O app marca o usuário **dentro da transação** com `set_config('app.usuario_id', id, true)`. A política `dados_do_usuario` compara essa marca com `usuario_id` em cada linha. O `true` limita a marca à transação; ela não acompanha uma conexão reutilizada pelo pool.
